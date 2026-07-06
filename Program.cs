@@ -9,7 +9,13 @@ string targetUrl = "";
 string verb = "";
 
 var requestBody = new StringContent(
-    """{"id":100,"name":"Jane Doe"}""",
+    """
+    {
+        "title": "API Assignment",
+        "body": "Demonstrating HTTP Verbs",
+        "userId": 1
+    }
+    """,
     Encoding.UTF8,
     "application/json"
 );
@@ -21,24 +27,28 @@ if (choice == "A")
 {
     verb = "GET";
     targetUrl = specificUrl;
+    // GET - Retrieves existing data from the API.
     response = await client.GetAsync(targetUrl);
 }
 else if (choice == "B")
 {
     verb = "POST";
     targetUrl = baseUrl;
+    // POST - Creates a new resource in the API.
     response = await client.PostAsync(targetUrl, requestBody);
 }
 else if (choice == "C")
 {
     verb = "PUT";
     targetUrl = specificUrl;
+    // PUT - Updates an existing resource in the API.
     response = await client.PutAsync(targetUrl, requestBody);
 }
 else if (choice == "D")
 {
     verb = "DELETE";
     targetUrl = specificUrl;
+    // DELETE - Removes an existing resource from the API.
     response = await client.DeleteAsync(targetUrl);
 }
 
@@ -57,18 +67,10 @@ if (response != null)
         }
         else if (verb == "GET")
         {
-            var forecast = new WeatherForecastController.WeatherForecast
-            {
-                Date = DateTime.Now,
-                TemperatureC = 33,
-                Summary = "Partly Cloudy with occasional showers"
-            };
+            string body = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine("\n--- WEATHER FORECAST ---");
-            Console.WriteLine($"Date: {forecast.Date.ToShortDateString()}");
-            Console.WriteLine($"Temperature: {forecast.TemperatureC}°C ({forecast.TemperatureF}°F)");
-            Console.WriteLine($"Summary: {forecast.Summary}");
-            Console.WriteLine("------------------------");
+            Console.WriteLine("\nResponse Body:");
+            Console.WriteLine(body);
         }
     }
     else
